@@ -11,20 +11,839 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #000;
-    }
+/* Aquí siguen tus estilos */
 
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
+body {
+  font-family: var(--tipografia, 'Segoe UI'), sans-serif;
+  background-color: var(--fondo, #000);
+  color: var(--texto, #00f7ff);
+  text-align: center;
+  margin: 10px;
+
+  /* 👇 clave para ocupar toda la pantalla */
+  min-height: 100vh;
+  margin: 0;
+
+
+    /* Para que las texturas se vean bien */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Bloqueo total de zoom, permitiendo scroll vertical */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+  touch-action: pan-y;
+  -ms-touch-action: pan-y;
+}
+
+
+h1 {
+  font-size: 100px;
+  font-weight: bold;
+  background: var(--tituloGradient, linear-gradient(to right,#9ffccc, #9ffccc));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* Tarjetas */
+.card {
+  position: relative;
+  background-color: var(--cardFondo, #0e0d12); /* fondo oscuro */
+  border-radius: 40px;
+  padding: 50px;
+  margin: 50px auto;
+  max-width: 900px;
+  z-index: 1; /* para que el contenido quede encima */
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0; /* cubrir todo */
+  border-radius: inherit; /* 👈 respeta el mismo redondeo */
+  padding: 6px; /* grosor del borde */
+  background: linear-gradient(100deg, #6207f5, #f50782);
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: -1;
+}
+
+.card h2 {
+  color: var(--subtitulo, #7b00ff);
+  font-size: 60px;
+  font-weight: bold;
+  font-family: var(--tipografia, 'Orbitron'), sans-serif;
+}
+
+/* Etiquetas */
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+  font-size: 30px;
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+}
+
+/* Campos */
+select, input[type="number"], input[type="file"], input[type="text"] {
+  width: 85%;
+  max-width: 800px;
+  background-color: var(--inputFondo, #d5f5e6); /* usa variable, fallback celeste */
+  color: #080808;                /* texto negro por defecto */
+  font-family: 'Orbitron', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  padding: 6px 8px;
+  margin: 20px auto;
+  border: 10px solid #112b38;
+  border-radius: 20px;
+  box-shadow:
+    0 0 10px #3ef0a0,
+    inset 0 0 6px #3ef0a0,
+    inset 0 0 3px #3ef0a0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  white-space: normal;  
+  word-wrap: break-word;
+  line-height: 1.2;
+}
+
+/* Botones */
+button {
+  margin: 12px 10px;
+  padding: 18px 28px;
+  font-size: 30px;
+  font-weight: bold;
+  background: var(--botones, linear-gradient(45deg, #bfff00, #bfff00, #bfff00));
+  color: var(--textoBoton, #000);
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 0 12px #fdfff2;
+  font-family: var(--tipografia, 'Orbitron'), sans-serif;
+}
+button:hover { opacity: 0.85; }
+/* 🎥 Ajuste del video LED para ocupar completamente la pantalla LED */
+#indicadores {
+  position: relative !important;
+  width: 100% !important;
+  height: 230px !important; /* Altura normal cuando es texto */
+  padding: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  background: var(--ledFondo, repeating-linear-gradient(90deg, #000, #000 10px, #111 10px, #111 20px)) !important;
+  transition: height 0.4s ease-in-out !important; /* Suave transición */
+  box-shadow: 0 0 25px var(--ledSombra, rgba(255,255,255,0.6)) !important;
+  border-radius: 0 !important;
+}
+
+/* Cuando la pantalla LED tiene video, se agranda automáticamente */
+#indicadores.modo-video {
+  height: 350px !important; /* 🔹 Altura deseada del LED con video */
+  background: #000 !important; /* Fondea negro cuando hay video */
+}
+
+/* === Estilo del texto LED === */
+#indicadores span {
+  display: inline-block !important;
+  padding-left: 20% !important;
+  animation: scroll 12s linear infinite, blink 1s infinite alternate !important;
+  font-family: var(--tipografiaPantalla, 'VT323'), monospace !important;
+  font-size: var(--ledSpanFontSize, 90px) !important;
+  font-weight: 900 !important;
+  letter-spacing: 2px !important;
+  color: var(--ledTexto, #ddfacd) !important;
+  text-shadow: 0 0 4px var(--ledBrilloTexto, #ddfacd) !important;
+}
+
+/* 🔄 Animaciones del texto LED */
+@keyframes scroll {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.75; }
+  100% { opacity: 1; }
+}
+
+/* Contenedor del video LED */
+#videoLED-container {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important; /* 🔹 Siempre llena la pantalla LED completa */
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  background: #000 !important;
+}
+
+/* El video se ajusta automáticamente para llenar todo el LED */
+#videoLED {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  object-fit: cover !important;  /* 🔹 Llenar todo el área sin deformar */
+  object-position: center center !important;
+  border: none !important;
+  cursor: pointer !important;
+  z-index: 1 !important;
+}
+
+/* Texto "Pincha aquí para más información" centrado dentro del video */
+#textoClickVideo {
+  position: absolute !important;
+  bottom: 0.5% !important; /* 🔹 un poco más abajo */
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 90% !important;
+  text-align: center !important;
+  background: none !important; /* 🔹 sin cuadro negro */
+  color: #ffffff !important;
+  font-family: 'Orbitron', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  border-radius: 10px !important;
+  padding: 6px 10px !important;
+  animation: scrollVideoText 25s linear infinite !important;
+  white-space: nowrap !important;
+  z-index: 2 !important;
+  cursor: pointer !important;
+}
+
+/* Ajuste en celulares */
+@media (max-width: 768px) {
+  #indicadores.modo-video {
+    height: 350px !important; /* 🔹 Misma altura en móvil */
+  }
+
+  #textoClickVideo {
+    font-size: 12px !important;
+  }
+
+  #indicadores span {
+    font-size: 60px !important;
+  }
+}/* 🖼️ Imágenes/GIFs dentro del LED */
+#indicadores span img {
+  max-height: 130px;     /* LED es 140px de alto, evita cortes */
+  max-width: 60vw;       /* por si la imagen es muy ancha */
+  vertical-align: middle;
+  border-radius: 12px;
+  margin-left: 10px;     /* respiro respecto al texto/firma */
+  box-shadow: 0 0 10px rgba(255,255,255,0.25);
+}
+
+@media (max-width: 768px) {
+  #indicadores span img {
+    max-height: 90px;
+    max-width: 80vw;
+  }
+}
+
+/* Pantallas chicas (celulares) */
+@media (max-width: 768px) {
+  #indicadores {
+    width: 100%;
+    min-width: auto;   /* 👈 elimina el mínimo en móviles */
+    max-width: 100%;   /* 👈 se adapta al ancho del celular */
+    font-size: 24px;   /* opcional: texto más pequeño para que no se corte */
+  }
+
+  #indicadores span {
+    font-size: 48px;   /* 👈 LED más chico y legible en móviles */
+  }
+}
+
+/* Alerta */
+#alertaPersonalizada {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-0%);
+  background: linear-gradient(135deg, #00ffcc, #39ff14);
+  color: #000;
+  font-size: 28px;
+  font-weight: bold;
+  padding: 22px 36px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px #00ffcc;
+  display: none;
+  z-index: 9999;
+}
+
+/* Botones al final */
+.footer-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 30px;
+}
+@media (max-width: 768px) {
+  body {
+    font-size: 1.8rem; /* 👈 más grande en móviles */
+    padding: 20px;      /* 👈 menos espacio pero más cómodo visualmente */
+  }
+
+  h1 {
+    font-size: 48px;    /* 👈 tamaño grande pero manejable en pantallas pequeñas */
+  }
+
+  input, button {
+    font-size: 1.4rem;  /* 👈 agranda campos y botones */
+  }
+}
+#whatsapp-btn {
+  position: relative;
+  top: 10px;   /* lo bajas hasta que no tape nada */
+  left: 20px;   /* pegado a la izquierda */
+  cursor: pointer;
+  z-index: 9999;
+  text-align: center;
+ 
+}
+
+#whatsapp-btn img {
+  width: 65px;
+  height: 65px;
+  filter: drop-shadow(0 0 8px #00ff00);
+  transition: transform 0.2s ease-in-out;
+}
+#whatsapp-btn img:hover { transform: scale(1.1); }
+.whatsapp-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 28px; /* puedes ajustarlo */
+  font-weight: bold;
+  text-align: center;
+  margin-top: 8px;
+  margin-bottom: 20px;
+  background: linear-gradient(to right, #00f7ff, #8000c8); /* degradado igual al título */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.arrow {
+  display: block;
+  font-size: 28px;
+  background: linear-gradient(to right, #00f7ff, #8000c8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+  text-align: center;
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.custom-modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+.modal-content {
+  background: black;
+  border: 2px solid #00ffcc;
+  color: #00ffcc;
+  font-family: 'Orbitron', sans-serif;
+  text-align: center;
+  padding: 40px;
+  box-shadow: 0 0 15px #00ffcc;
+  border-radius: 30px;
+   max-width: 500px;
+  width: 90%;
+}
+
+.modal-content h2 {
+  font-size: 50px;
+  margin-bottom: 20px;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.modal-content button {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  background: black;
+  color: #00ffcc;
+  border: 1px solid #00ffcc;
+  font-size: 40px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.modal-content button:hover {
+  background: #00ffcc;
+  color: black;
+}
+
+/* Estilos calculadora */
+#calc-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 20px;
+}
+
+#calc-container button {
+  font-size: 100px;
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid #00ffcc;
+  background: black;
+  color: #00ffcc;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+#calc-container button:hover {
+  background: #00ffcc;
+  color: black;
+}
+
+#calc-display {
+  grid-column: span 5;
+  background: #111;
+  color: #0f0;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 40px;
+  padding: 18px;
+  border: 2px solid #00ffcc;
+  border-radius: 12px;
+  text-align: right;
+}
+
+
+.close-btn {
+  position: absolute;
+  top: 15px; right: 20px;
+  font-size: 20px;
+  color: #00ffcc;
+  cursor: pointer;
+}
+
+
+
+.pantalla-gameboy {
+  width: 750px;
+  height: 250px;
+  background-color: var(--pantallaGameboyFondo, #d5f5e6); /* 👈 usa variable */
+  color: #080808;                /* texto negro por defecto */
+  font-family: 'Share Tech Mono', monospace; /* 👈 estilo reloj digital */
+  font-size: 45px;
+  font-weight: 700;
+  padding: 6px 8px;
+  margin: 20px auto;
+  border: 10px solid #112b38;
+  border-radius: 32px;
+  box-shadow:
+    0 0 10px #3ef0a0,
+    inset 0 0 6px #3ef0a0,
+    inset 0 0 3px #3ef0a0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  white-space: normal;  
+  word-wrap: break-word;
+  line-height: 1.2;
+}
+
+.pantalla-mes {
+  color: #7b00ff;  
+  font-family: 'Orbitron', sans-serif;
+  font-size: 45px;
+  font-weight: 700;
+}
+
+.pantalla-item {
+  color: #961148;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+/* Ocultar scrollbar en todos los navegadores */
+.pantalla-gameboy::-webkit-scrollbar { 
+  display: none; /* Chrome, Safari, Edge */
+}
+.pantalla-gameboy {
+  -ms-overflow-style: none;  /* IE y Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+#videoContainer {
+  display: none;
+width: 851px;
+height: 315px;
+margin: 40px auto;
+align-items: center;
+justify-content: center;
+overflow: hidden;
+border-radius: 30px;
+position: relative;
+}
+
+
+video {
+width: 100%;
+height: 100%;
+border-radius: 30px;
+object-fit: cover;
+}
+
+
+/* 🎛️ Botón mute flotante */
+.btn-mute {
+position: absolute;
+bottom: 15px;
+right: 15px;
+background: rgba(0, 0, 0, 0.7);
+border: none;
+color: white;
+font-size: 20px;
+padding: 8px 12px;
+border-radius: 50%;
+cursor: pointer;
+z-index: 10;
+transition: background 0.3s ease;
+}
+
+.btn-mute:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+/* Botón con el MISMO diseño del selector "Mes" + transparencia en reposo */
+.btn-calculadora {
+  width: 85%;
+  max-width: 800px;
+  border: 10px solid #112b38;
+  border-radius: 20px;
+  box-shadow:
+    0 0 10px #3ef0a0,
+    inset 0 0 6px #3ef0a0,
+    inset 0 0 3px #3ef0a0;
+
+  font-family: 'Orbitron', sans-serif;
+  color: #080808;
+  background-color: var(--inputFondo, #bfff00); /* 🔹 fondo fijo */
+  
+  min-height: 84px;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+  text-align: center;
+  box-sizing: border-box;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-calculadora__label {
+  font-size: 34px;
+  font-weight: 700;
+}
+
+/* Efecto máquina de escribir en la pantalla Gameboy */
+#contenidoItem span.typing {
+  display: inline-block;
+  white-space: pre-wrap;
+  overflow: hidden;
+  border-right: 3px solid #112b38; /* cursor parpadeante */
+  animation: caret 0.7s steps(1) infinite;
+}
+
+@keyframes caret {
+  50% { border-color: transparent; }
+}
+
+/* 🔹 Pantalla LED Resumen con brillo superior e inferior suave */
+#indicadores-resumen {
+  width: 100%;
+  height: 70px; /* franja delgada */
+  overflow: hidden;
+  white-space: nowrap;
+  background: var(--ledFondo, repeating-linear-gradient(90deg, #000, #000 10px, #111 10px, #111 20px));
+  border-radius: 18px;
+  padding: 15px;
+  font-size: var(--ledFontSize, 28px);
+  font-weight: bold;
+  color: var(--ledTexto, #ffffff);
+  text-shadow: 0 0 8px var(--ledBrilloTexto, #ffffff);
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  border: none;
+}
+
+/* ✨ Contornos luminosos solo arriba y abajo (suaves) */
+#indicadores-resumen::before,
+#indicadores-resumen::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 4px; /* grosor del brillo */
+  background: linear-gradient(
+    90deg,
+    rgba(255, 0, 255, 0.35) 0%,
+    rgba(0, 255, 255, 0.55) 50%,
+    rgba(255, 255, 0, 0.35) 100%
+  );
+  filter: blur(6px);
+  animation: brilloHorizontal 3s ease-in-out infinite alternate;
+}
+
+#indicadores-resumen::before {
+  top: 0;
+}
+
+#indicadores-resumen::after {
+  bottom: 0;
+}
+
+/* 🔹 Texto del LED resumen general */
+#indicadores-resumen span {
+  display: inline-block;
+  padding-left: 20%;
+  animation: scroll 16s linear infinite; /* ✅ Se mantiene solo el desplazamiento */
+  font-family: var(--tipografiaPantalla, 'VT323'), monospace;
+  font-size: var(--ledSpanFontSize, 70px);
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+/* 🌸 Texto principal (resumen: hora, fecha, ingresos, egresos) */
+#indicadores-resumen span.texto-resumen {
+  color: #ff006a; /* Rosa LED brillante */
+  text-shadow:
+    0 0 4px rgba(255, 0, 106, 0.6),
+    0 0 10px rgba(255, 0, 106, 0.3);
+  animation: none !important; /* 🚫 Sin parpadeo */
+}
+
+/* 🤍 Texto del recordatorio (blanco, sin brillo ni parpadeo) */
+#indicadores-resumen span.texto-recordatorio {
+  color: #ffffff !important; /* Blanco puro */
+  text-shadow: none !important;
+  font-weight: bold;
+  animation: none !important;
+  margin-left: 8px;
+}
+
+/* 🔥 Animación suave del brillo horizontal */
+@keyframes brilloHorizontal {
+  from {
+    opacity: 0.6;
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(10px);
+  }
+}
+
+
+
+
+/* 🔹 Contenedor del botón debajo del LED Resumen */
+.contenedor-boton {
+  text-align: center;
+  margin-top: 8px; /* distancia entre el LED y el botón */
+}
+
+/* 🔹 Contenedor del botón debajo del LED Resumen */
+.contenedor-boton {
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* 🔹 Botón con borde degradado redondeado RGB */
+#boton-aplicaciones {
+  position: relative;
+  display: inline-block;
+  padding: 18px 50px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #ddfacd;
+  background: #000; /* fondo oscuro para contraste */
+  border: none; /* quitamos el borde original */
+  border-radius: 50px; /* esquinas redondeadas */
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* ✨ Borde degradado falso (perfectamente redondeado) */
+#boton-aplicaciones::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: inherit; /* 🔹 sigue el mismo redondeo */
+  padding: 3px; /* grosor del borde */
+  background: linear-gradient(90deg, #00ffff, #ff00ff, #ffff00);
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  z-index: -1;
+}
+
+/* ✨ Efecto hover */
+#boton-aplicaciones:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+  opacity: 0.95;
+}
+
+/* 🔹 Versión adaptada para celulares */
+@media (max-width: 768px) {
+  #boton-aplicaciones {
+    width: 90%;
+    font-size: 42px;
+    padding: 25px 0;
+    border-radius: 60px;
+  }
+}
+
+/* ✨ Animación de aparición épica para la GameBoy */
+.animarEntrada {
+  animation: aparecer 0.7s cubic-bezier(.2,.9,.2,1) forwards;
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Tipografía y colores estilizados GameBoy 💜💙 */
+.gb-texto {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 32px;
+  line-height: 1.4;
+  text-align: center;
+  color: #000000;
+}
+
+.gb-mes {
+  font-size: 40px;
+  font-weight: bold;
+  color: #7e00fc; /* morado */
+  margin-bottom: 5px;
+}
+
+.gb-item {
+  font-size: 40px;
+  font-weight: bold;
+  color: #f70063; /* fuxia oscuro */
+  margin-bottom: 8px;
+}
+
+.gb-datos {
+  font-size: 36px;
+  color: #000000;
+}
+
+/* Texto "Pincha aquí..." dentro del LED */
+#textoClickImagen {
+  position: absolute !important;
+  bottom: 15px !important;
+  left: 0 !important;
+  width: 100% !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  pointer-events: auto !important;
+  z-index: 9999 !important;
+  text-align: left !important;
+}
+
+#scrollTextImagen {
+  display: inline-block !important;
+  padding-left: 100% !important; /* inicia fuera a la derecha */
+  font-family: 'Orbitron', sans-serif !important;
+  font-size: 22px !important;
+  font-weight: bold !important;
+  color: inherit !important;
+  animation: scrollTextImagen 18s linear infinite !important;
+  will-change: transform;
+  user-select: none;
+}
+
+@keyframes scrollTextImagen {
+  0% { transform: translateX(100%); }   /* 🔹 Arranca desde la derecha */
+  100% { transform: translateX(-100%); } /* 🔹 Termina a la izquierda */
+}
+
+
+   .alerta-futurista {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0f0f0f;
+    color: #00ffcc;
+    padding: 25px 50px;
+    border: 2px solid #00ffcc;
+    border-radius: 30px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 42px;
+    text-align: center;
+    z-index: 9999;
+    box-shadow: 0 0 12px #00ffcc;
+    animation: fadeOutFuturista 2s forwards;}
+@keyframes fadeOutFuturista {
+    0% { opacity: 1;}
+80% { opacity: 1;}
+100% { opacity: 0; top: 10px;}
+
+
+@keyframes scrollFbText {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
   </style>
 </head>
 <body>
