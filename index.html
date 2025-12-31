@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Control Finanzas</title>
+
+  <!-- ========================= -->
+  <!-- PWA CONFIGURACIÓN -->
+  <!-- ========================= -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#000000">
+
+  <!-- ========================= -->
+  <!-- VIEWPORT (CLAVE DEL PROBLEMA) -->
+  <!-- ========================= -->
+  <meta name="viewport"
+        content="width=device-width,
+                 initial-scale=1,
+                 maximum-scale=1,
+                 user-scalable=no,
+                 viewport-fit=cover">
+
+  <!-- ========================= -->
+  <!-- FULLSCREEN PWA -->
+  <!-- ========================= -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+
+
+
+ <style>
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    overflow: hidden;
+
+    /* BLINDA ANDROID */
+    font-size: 16px;
+    touch-action: manipulation;
+  }
+
+  body {
+    position: fixed;
+    inset: 0;
+  }
+
+  iframe {
+    position: absolute;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    border: none;
+
+    /* FUERZA MODO MÓVIL */
+    min-width: 100vw;
+    min-height: 100vh;
+
+    /* EVITA ESCALADO DESKTOP */
+    zoom: 1;
+  }
+
+  /* SOLO MÓVIL */
+  @media (max-width: 768px) {
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+  }
+</style>
+
+</head>
+<body>
+
+  <iframe
+    src="https://script.google.com/macros/s/AKfycbwLtTlx0GN9k_WiXt3p67SHOuRr1bRMkE1PLLy_xbD6NWT65L8ZH42-iyT28nondEfimQ/exec"
+    allow="camera; microphone"
+    sandbox="allow-scripts allow-forms allow-same-origin allow-modals"
+  ></iframe>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(() => console.log('✅ Service Worker registrado'))
+        .catch(err => console.error('❌ Error SW:', err));
+    }
+  </script>
+
+
+
+</body>
+</html>
