@@ -20,28 +20,41 @@
       overflow: hidden;
     }
 
+    /* Marco tipo app móvil */
+    #frame-wrapper {
+      width: 390px;        /* ancho móvil estándar */
+      height: 100vh;
+      margin: 0 auto;
+      overflow: hidden;
+      background: #000;
+    }
+
     iframe {
-      width: 100%;
+      width: 1000px;       /* ancho REAL de Apps Script */
       height: 100%;
       border: none;
     }
 
-    /* 🔥 SOLO EN CELULARES */
-    @media (max-width: 768px) {
+    /* En desktop dejamos full */
+    @media (min-width: 900px) {
+      #frame-wrapper {
+        width: 100%;
+      }
+
       iframe {
-        zoom: 0.38;              /* ajusta fino: 0.35 – 0.45 */
-        width: 263%;
-        height: 263%;
+        width: 100%;
       }
     }
   </style>
 </head>
 
 <body>
-  <iframe
-    src="https://script.google.com/macros/s/AKfycbxBNeot8mKAILy8UsAIj-HSQz-p3CYPkyZkHs6p-LvnPBujFGqtgh9wetrt8UFZgcwMIA/exec"
-    allow="camera; microphone"
-  ></iframe>
+  <div id="frame-wrapper">
+    <iframe
+      src="https://script.google.com/macros/s/AKfycbxBNeot8mKAILy8UsAIj-HSQz-p3CYPkyZkHs6p-LvnPBujFGqtgh9wetrt8UFZgcwMIA/exec"
+      allow="camera; microphone"
+    ></iframe>
+  </div>
 </body>
 </html>
 
