@@ -2,38 +2,70 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+
   <title>Control Finanzas</title>
 
+  <!-- PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#f50782">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
-  <!-- CLAVE ABSOLUTA -->
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      background: #000;
-    }
+<style>
+  * {
+    box-sizing: border-box;
+  }
 
-    iframe {
-      width: 100vw;   /* 🔥 NO 100% */
-      height: 100vh;  /* 🔥 NO 100% */
-      border: none;
-      display: block;
-    }
-  </style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+  }
+
+  #viewport {
+    transform-origin: top left;
+  }
+
+  iframe {
+    border: none;
+  }
+</style>
+
+
 </head>
-
 <body>
-  <iframe
-    src="https://script.google.com/macros/s/AKfycbwTjadqElfWohDNhi_LzmsWA4aCdoX9BTUUjXlYqQtSOA2Dr3PWsFc-rPg1FSS7QnWLkw/exec"
-    allow="camera; microphone"
-  ></iframe>
+
+  <div id="viewport">
+    <iframe
+      id="appFrame"
+      src="https://script.google.com/macros/s/AKfycbwTjadqElfWohDNhi_LzmsWA4aCdoX9BTUUjXlYqQtSOA2Dr3PWsFc-rPg1FSS7QnWLkw/exec"
+      allow="camera; microphone"
+    ></iframe>
+  </div>
+
+  <script>
+    const BASE_WIDTH = 1000; // GAS layout real
+
+    function scaleApp() {
+      const scale = window.innerWidth / BASE_WIDTH;
+      const iframe = document.getElementById('appFrame');
+      const viewport = document.getElementById('viewport');
+
+      viewport.style.transform = `scale(${scale})`;
+      viewport.style.width = BASE_WIDTH + 'px';
+      viewport.style.height = (window.innerHeight / scale) + 'px';
+
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+    }
+
+    window.addEventListener('load', scaleApp);
+    window.addEventListener('resize', scaleApp);
+  </script>
+
 </body>
+
 </html>
