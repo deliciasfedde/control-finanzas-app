@@ -8,43 +8,32 @@
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#f50782">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
 
-<style>
-  * {
-    box-sizing: border-box;
-  }
-
-  html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: #000;
-  }
-
-  #viewport {
-    transform-origin: top left;
-  }
-
-  iframe {
-    border: none;
-  }
-</style>
-
-
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
 </head>
 <body>
 
-  <div id="viewport">
-    <iframe
-      id="appFrame"
-      src="https://script.google.com/macros/s/AKfycbwTjadqElfWohDNhi_LzmsWA4aCdoX9BTUUjXlYqQtSOA2Dr3PWsFc-rPg1FSS7QnWLkw/exec"
-      allow="camera; microphone"
-    ></iframe>
-  </div>
+  <iframe
+    src="https://script.google.com/macros/s/AKfycbxBNeot8mKAILy8UsAIj-HSQz-p3CYPkyZkHs6p-LvnPBujFGqtgh9wetrt8UFZgcwMIA/exec"
+    allow="camera; microphone"
+  ></iframe>
+
 
   <script>
     const BASE_WIDTH = 1000; // GAS layout real
@@ -66,6 +55,13 @@
     window.addEventListener('resize', scaleApp);
   </script>
 
-</body>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(() => console.log('✅ Service Worker registrado'))
+        .catch(err => console.error('❌ Error SW:', err));
+    }
+  </script>
 
+</body>
 </html>
