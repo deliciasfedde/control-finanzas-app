@@ -34,27 +34,6 @@
     allow="camera; microphone"
   ></iframe>
 
-
-  <script>
-    const BASE_WIDTH = 1000; // GAS layout real
-
-    function scaleApp() {
-      const scale = window.innerWidth / BASE_WIDTH;
-      const iframe = document.getElementById('appFrame');
-      const viewport = document.getElementById('viewport');
-
-      viewport.style.transform = `scale(${scale})`;
-      viewport.style.width = BASE_WIDTH + 'px';
-      viewport.style.height = (window.innerHeight / scale) + 'px';
-
-      iframe.style.width = '100%';
-      iframe.style.height = '100%';
-    }
-
-    window.addEventListener('load', scaleApp);
-    window.addEventListener('resize', scaleApp);
-  </script>
-
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./service-worker.js')
@@ -65,3 +44,4 @@
 
 </body>
 </html>
+
