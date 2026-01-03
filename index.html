@@ -5,10 +5,17 @@
 
   <title>Control Finanzas</title>
 
+  <!-- FORZAR MOBILE REAL -->
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#f50782">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- EVITAR INTERFERENCIAS DE GITHUB -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="referrer" content="no-referrer">
 
   <style>
     html, body {
@@ -21,27 +28,25 @@
     }
 
     iframe {
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       border: none;
+      display: block;
     }
   </style>
 </head>
+
 <body>
 
+  <!-- IFRAME LIMPIO Y PERMITIDO -->
   <iframe
     src="https://script.google.com/macros/s/AKfycbxBNeot8mKAILy8UsAIj-HSQz-p3CYPkyZkHs6p-LvnPBujFGqtgh9wetrt8UFZgcwMIA/exec"
-    allow="camera; microphone"
+    allow="camera; microphone; fullscreen"
+    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
   ></iframe>
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./service-worker.js')
-        .then(() => console.log('✅ Service Worker registrado'))
-        .catch(err => console.error('❌ Error SW:', err));
-    }
-  </script>
+  <!-- ⚠️ NO SERVICE WORKER AQUÍ -->
+  <!-- GitHub + SW rompe Apps Script -->
 
 </body>
 </html>
-
